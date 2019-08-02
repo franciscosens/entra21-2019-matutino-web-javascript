@@ -1,16 +1,26 @@
 tarefas = [];
+var indiceParaEditar = -1;
 
 function salvar(e) {
     // 13 é o código do enter no teclado
     if (e.keyCode == 13) {
+        adicionarEditar();
+    }
+}
+
+function adicionarEditar() {
+    if (indiceParaEditar == -1) {
         adicionar();
+    }
+    else {
+        editar();
     }
 }
 
 function adicionar() {
     var campoNome = document.getElementById("nome");
     var nome = campoNome.value;
-    valido = validar(nome, campoNome);
+    valido = validarCampo(nome, campoNome);
     if (valido == false) {
         // mostrar feedback
         return;
@@ -34,7 +44,6 @@ function adicionar() {
     elementoTdAcao.appendChild(elementoBotaoEditar);
     elementoTdAcao.appendChild(elementoBotaoApagar);
 
-
     elementoTr.appendChild(elementoTdNome);
     elementoTr.appendChild(elementoTdAcao);
 
@@ -44,7 +53,6 @@ function adicionar() {
     limparCampo(campoNome);
     atualizarQuantidade();
 }
-
 
 function apagar() {
     var confirmacao = confirm('Deseja realmente apagar');
@@ -73,7 +81,19 @@ function preencherCampo() {
     document.getElementById('nome').focus();
 }
 
-function editar() { }
+function editar() {
+    var nome = document.getElementById('nome').value;
+    tarefas[indiceParaEditar] = nome;
+
+    // atualizar tabela
+    var trs = document.getElementById('registros').childNodes;
+    var elementoTr = trs[indiceParaEditar];
+    elementoTr.childNodes[0].innerHTML = nome;
+
+    indiceParaEditar = -1;
+    document.getElementById('nome').value = '';
+    document.getElementById('nome').focus();
+}
 
 function atualizarQuantidade() {
     document.getElementById("quantidade")
@@ -85,7 +105,7 @@ function limparCampo(campo) {
     campo.focus();
 }
 
-function validar(nome, campo) {
+function validarCampo(nome, campo) {
     texto = '';
     if (nome.trim().length == 0) {
         texto = 'Nome deve ser preenchido';
@@ -123,4 +143,10 @@ function validar(nome, campo) {
     }
 
     return true;
+}
+
+function validar() {
+    var campo = document.getElementById('nome');
+    var nome = campo.value;
+    return validarCampo(nome, campo);
 }
