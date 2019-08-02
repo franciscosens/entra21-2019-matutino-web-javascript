@@ -24,10 +24,12 @@ function adicionar() {
     var elementoBotaoEditar = document.createElement("button");
     elementoBotaoEditar.innerHTML = "Editar";
     elementoBotaoEditar.classList.add("btn", "btn-primary", "mr-2");
+    elementoBotaoEditar.onclick = preencherCampo;
 
     var elementoBotaoApagar = document.createElement("button");
     elementoBotaoApagar.innerHTML = "Apagar";
     elementoBotaoApagar.classList.add("btn", "btn-danger");
+    elementoBotaoApagar.onclick = apagar;
 
     elementoTdAcao.appendChild(elementoBotaoEditar);
     elementoTdAcao.appendChild(elementoBotaoApagar);
@@ -43,9 +45,33 @@ function adicionar() {
     atualizarQuantidade();
 }
 
-function apagar() { }
 
-function preencherCampo() { }
+function apagar() {
+    var confirmacao = confirm('Deseja realmente apagar');
+    if (confirmacao == true) {
+        var elemento = event.target;
+        var elementoTd = elemento.parentNode;
+        var elementoTr = elementoTd.parentNode;
+        var elementoTBody = elementoTr.parentNode;
+
+        var elementoTdNome = elementoTr.childNodes[0];
+        var nome = elementoTdNome.innerHTML;
+        tarefas.pop(nome);
+        atualizarQuantidade();
+        elementoTBody.removeChild(elementoTr);
+    }
+}
+
+function preencherCampo() {
+    var elementoBotaoEditar = event.target;
+    var elementoTr = elementoBotaoEditar
+        .parentNode.parentNode;
+    var elementoTdNome = elementoTr.childNodes[0];
+    var nome = elementoTdNome.innerHTML;
+    indiceParaEditar = tarefas.indexOf(nome);
+    document.getElementById('nome').value = nome;
+    document.getElementById('nome').focus();
+}
 
 function editar() { }
 
@@ -70,8 +96,8 @@ function validar(nome, campo) {
     }
 
     campo.classList.remove('border-danger', 'text-danger');
-
-    var elementos = document.getElementsByClassName('span-erro');
+    var elementos = document
+        .getElementsByClassName('span-erro');
 
     for (var i = 0; i < elementos.length; i++) {
         var elemento = elementos[i];
@@ -84,7 +110,10 @@ function validar(nome, campo) {
 
         var spanErro = document.createElement('span');
         spanErro.innerHTML = texto;
-        spanErro.classList.add('span-erro','text-danger', 'font-weight-bold');
+        spanErro.classList.add('span-erro',
+            'text-danger', 'font-weight-bold');
+
+
 
         var elementoPaiDoInput = campo.parentNode;
         elementoPaiDoInput.appendChild(spanErro);
